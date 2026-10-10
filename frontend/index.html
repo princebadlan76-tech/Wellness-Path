@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellness Path - Expert Fitness & Health Guides</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Wellness<span>Path</span></a>
+            <nav>
+                <a href="index.html" class="active">Home</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Evidence-Based Fitness & Wellness Guides</h1>
+            <p>Your trusted companion for effective workouts, science-backed nutrition, and sustainable lifestyle changes.</p>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search articles (e.g., muscle gain, cardio, diet)...">
+            </div>
+        </section>
+
+        <section class="categories">
+            <button class="cat-btn active" data-category="all">All Articles</button>
+            <button class="cat-btn" data-category="fitness">Fitness & Workouts</button>
+            <button class="cat-btn" data-category="nutrition">Nutrition & Diet</button>
+            <button class="cat-btn" data-category="recovery">Recovery & Sleep</button>
+        </section>
+
+        <section class="articles-grid" id="articlesGrid">
+            <!-- Article Card 1 -->
+            <article class="article-card" data-category="fitness">
+                <div class="card-content">
+                    <span class="badge">Fitness</span>
+                    <h2>Hypertrophy 101: How to Build Muscle Effectively</h2>
+                    <p class="excerpt">Discover the core principles of progressive overload, optimal volume, and recovery required to stimulate muscle growth safely.</p>
+                    <div class="card-footer">
+                        <span>5 min read</span>
+                        <a href="#" class="read-more">Read Guide &rarr;</a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Article Card 2 -->
+            <article class="article-card" data-category="nutrition">
+                <div class="card-content">
+                    <span class="badge">Nutrition</span>
+                    <h2>Protein Intake for Weight Gain and Muscle Mass</h2>
+                    <p class="excerpt">Learn how much protein you actually need daily and the best whole-food sources to hit your fitness targets.</p>
+                    <div class="card-footer">
+                        <span>4 min read</span>
+                        <a href="#" class="read-more">Read Guide &rarr;</a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Article Card 3 -->
+            <article class="article-card" data-category="recovery">
+                <div class="card-content">
+                    <span class="badge">Recovery</span>
+                    <h2>The Science of Sleep: Why Rest Matters Most</h2>
+                    <p class="excerpt">Explore how deep sleep cycles affect muscle repair, hormone regulation, and overall cognitive performance.</p>
+                    <div class="card-footer">
+                        <span>6 min read</span>
+                        <a href="#" class="read-more">Read Guide &rarr;</a>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2026 Wellness Path. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="disclaimer.html">Medical Disclaimer</a>
+                <a href="affiliate-disclosure.html">Affiliate Disclosure</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
