@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Quill Rich Text Editor CDN -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <style>
         .auth-container, .admin-box {
             background: #ffffff;
@@ -32,9 +35,7 @@
         .stat-card h3 { margin: 0; font-size: 1.8rem; color: var(--primary); }
         .stat-card p { margin: 0.5rem 0 0 0; color: #6b7280; font-size: 0.9rem; }
         
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
+        .form-group { margin-bottom: 1.25rem; }
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
@@ -49,11 +50,7 @@
             font-size: 1rem;
             outline: none;
         }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .btn-submit {
             background: var(--primary);
             color: white;
@@ -86,9 +83,6 @@
             cursor: pointer;
             font-size: 0.9rem;
         }
-        .btn-logout:hover { background: #dc2626; }
-        
-        /* Tabs */
         .admin-tabs {
             display: flex;
             gap: 1rem;
@@ -106,10 +100,7 @@
             padding: 0.5rem 1rem;
             border-radius: 6px;
         }
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-        }
+        .tab-btn.active { background: var(--primary); color: white; }
         .article-list-item {
             display: flex;
             justify-content: space-between;
@@ -121,22 +112,21 @@
         .btn-edit { background: #f59e0b; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; }
         .btn-delete { background: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; }
         .cancel-edit { background: #6b7280; margin-top: 0.5rem; }
+        #editor { height: 250px; margin-bottom: 1rem; background: #fff; }
     </style>
 </head>
 <body>
     <header>
         <div class="container nav-container">
             <a href="index.html" class="logo">Wellness<span>Path</span> (Admin)</a>
-            <nav>
-                <a href="index.html" target="_blank">View Site</a>
-            </nav>
+            <nav><a href="index.html" target="_blank">View Site</a></nav>
         </div>
     </header>
 
     <main class="container">
         <section class="hero" style="padding: 2rem 0;">
-            <h1>Professional Admin Dashboard</h1>
-            <p>Manage content, SEO, and publishing workflow.</p>
+            <h1>WordPress-Style Admin Dashboard</h1>
+            <p>Manage content with visual rich-text editor and SEO tools.</p>
         </section>
 
         <!-- LOGIN SECTION -->
@@ -156,36 +146,25 @@
             </form>
         </div>
 
-        <!-- MAIN DASHBOARD -->
+        <!-- DASHBOARD SECTION -->
         <div id="adminSection" class="hidden">
             <div class="logout-bar">
-                <span id="adminUserEmail">Logged in as Admin</span>
+                <span>Logged in as Admin</span>
                 <button id="logoutBtn" class="btn-logout">Logout</button>
             </div>
 
-            <!-- Stats Overview -->
             <div class="stats-grid">
-                <div class="stat-card">
-                    <h3 id="statTotalPosts">0</h3>
-                    <p>Total Articles</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="statCategories">3</h3>
-                    <p>Categories</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="statPublished">0</h3>
-                    <p>Published Live</p>
-                </div>
+                <div class="stat-card"><h3 id="statTotalPosts">0</h3><p>Total Articles</p></div>
+                <div class="stat-card"><h3 id="statCategories">3</h3><p>Categories</p></div>
+                <div class="stat-card"><h3 id="statPublished">0</h3><p>Published Live</p></div>
             </div>
 
-            <!-- Navigation Tabs -->
             <div class="admin-tabs">
                 <button class="tab-btn active" onclick="switchTab('editorTab', this)">Article & SEO Editor</button>
                 <button class="tab-btn" onclick="switchTab('manageTab', this)">Manage Articles</button>
             </div>
 
-            <!-- TAB 1: EDITOR -->
+            <!-- EDITOR TAB -->
             <div id="editorTab" class="admin-box">
                 <h3 id="formTitle" style="margin-bottom: 1.5rem;">Create New Article</h3>
                 <form id="articleForm">
@@ -222,17 +201,17 @@
 
                     <div class="form-group">
                         <label>Featured Image URL</label>
-                        <input type="url" id="image_url" placeholder="https://example.com/image.jpg">
+                        <input type="url" id="image_url" placeholder="https://images.unsplash.com/photo-...">
                     </div>
 
                     <div class="form-group">
                         <label>Short Description / Excerpt</label>
-                        <textarea id="excerpt" rows="3" required placeholder="Brief summary for homepage..."></textarea>
+                        <textarea id="excerpt" rows="2" required placeholder="Brief summary for homepage..."></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label>Full Article Content (HTML supported)</label>
-                        <textarea id="content" rows="8" placeholder="Write full article content here..."></textarea>
+                        <label>Full Article Content (Visual Rich Text Editor)</label>
+                        <div id="editor"></div>
                     </div>
 
                     <h4 style="margin: 1.5rem 0 1rem 0; border-top: 1px solid var(--border); padding-top: 1rem;">SEO Settings</h4>
@@ -253,14 +232,11 @@
                 </form>
             </div>
 
-            <!-- TAB 2: MANAGE -->
+            <!-- MANAGE TAB -->
             <div id="manageTab" class="admin-box hidden">
                 <h3>All Articles</h3>
-                <div id="manageArticlesList" style="margin-top: 1rem;">
-                    <p style="text-align: center; color: #6b7280;">Loading...</p>
-                </div>
+                <div id="manageArticlesList" style="margin-top: 1rem;"><p style="text-align: center; color: #6b7280;">Loading...</p></div>
             </div>
-
         </div>
     </main>
 
@@ -269,6 +245,21 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNncHdreHZwdGVyd2pqbXZ5Y21kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NDY5NjUsImV4cCI6MjEwNzIyMjk2NX0.oDA47jyZfpzvY3IpFAmKyyiSEkkL5m7fUDb4ouPCorc';
 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Quill Rich Text Editor Initialization
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            placeholder: 'Type your full article content here... (Use bold, headings, bullet points, etc.)',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link', 'blockquote', 'code-block'],
+                    ['clean']
+                ]
+            }
+        });
 
         const authSection = document.getElementById('authSection');
         const adminSection = document.getElementById('adminSection');
@@ -373,7 +364,7 @@
             document.getElementById('status').value = post.status || 'published';
             document.getElementById('image_url').value = post.image_url || '';
             document.getElementById('excerpt').value = post.excerpt || '';
-            document.getElementById('content').value = post.content || '';
+            quill.root.innerHTML = post.content || '';
             document.getElementById('meta_title').value = post.meta_title || '';
             document.getElementById('meta_description').value = post.meta_description || '';
 
@@ -386,6 +377,7 @@
 
         cancelEditBtn.addEventListener('click', () => {
             articleForm.reset();
+            quill.setContents([]);
             editingIdInput.value = "";
             formTitle.innerText = "Create New Article";
             submitBtn.innerText = "Publish Article";
@@ -405,12 +397,12 @@
             const id = editingIdInput.value;
             const postData = {
                 title: document.getElementById('title').value,
-                slug: document.getElementById('slug').value,
+                slug: document.getElementById('slug').value || document.getElementById('title').value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
                 category: document.getElementById('category').value,
                 status: document.getElementById('status').value,
                 image_url: document.getElementById('image_url').value,
                 excerpt: document.getElementById('excerpt').value,
-                content: document.getElementById('content').value,
+                content: quill.root.innerHTML, // Rich HTML content from Quill
                 meta_title: document.getElementById('meta_title').value,
                 meta_description: document.getElementById('meta_description').value,
                 updated_at: new Date()
@@ -435,6 +427,7 @@
                 statusMessage.style.color = 'green';
                 statusMessage.innerText = 'Successfully saved!';
                 articleForm.reset();
+                quill.setContents([]);
                 editingIdInput.value = "";
                 formTitle.innerText = "Create New Article";
                 submitBtn.innerText = "Publish Article";
