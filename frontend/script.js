@@ -1,6 +1,6 @@
 // Supabase credentials (Updated with your URL and Anon Key)
 const SUPABASE_URL = 'https://cgpwkxvpterwjjmvycmd.supabase.co';[span_0](start_span)[span_0](end_span)
-const SUPABASE_ANON_KEY = 'Sb_publishable_dCPcgQ-1rxIjkwGI7BJJxg_GwUYMSMJ';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNncHdreHZwdGVyd2pqbXZ5Y21kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NDY5NjUsImV4cCI6MjEwNzIyMjk2NX0.oDA47jyZfpzvY3IpFAmKyyiSEkkL5m7fUDb4ouPCorc';
 
 // Supabase client initialize kar rahe hain
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
