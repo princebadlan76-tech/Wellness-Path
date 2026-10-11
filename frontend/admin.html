@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Wellness Path</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .admin-form {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--primary);
+        }
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+        #statusMessage {
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Wellness<span>Path</span> (Admin)</a>
+            <nav>
+                <a href="index.html">View Site</a>
+                <a href="admin.html" class="active">Admin Panel</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Create New Article</h1>
+            <p>Publish fresh guides and fitness tips directly to your live website.</p>
+        </section>
+
+        <div class="admin-form">
+            <form id="articleForm">
+                <div class="form-group">
+                    <label for="title">Article Title</label>
+                    <input type="text" id="title" required placeholder="e.g., Best Morning Stretches for Flexibility">
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" required>
+                        <option value="fitness">Fitness & Workouts</option>
+                        <option value="nutrition">Nutrition & Diet</option>
+                        <option value="recovery">Recovery & Sleep</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="excerpt">Short Description / Excerpt</label>
+                    <textarea id="excerpt" rows="4" required placeholder="Write a brief summary of the article..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">Publish Article</button>
+                <p id="statusMessage"></p>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2026 Wellness Path. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Supabase credentials
+        const SUPABASE_URL = 'https://cgpwkxvpterwjjmvycmd.supabase.co';[span_0](start_span)[span_0](end_span)
+        const SUPABASE_ANON_KEY = 'Sb_publishable_dCPcgQ-1rxIjkwGI7BJJxg_GwUYMSMJ';
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const articleForm = document.getElementById('articleForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMessage = document.getElementById('statusMessage');
+
+        articleForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const excerpt = document.getElementById('excerpt').value;
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Publishing...';
+            statusMessage.style.color = '#4b5563';
+            statusMessage.innerText = 'Uploading to database...';
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('posts')
+                    .insert([{ title, category, excerpt }]);
+
+                if (error) {
+                    throw error;
+                }
+
+                statusMessage.style.color = 'green';
+                statusMessage.innerText = 'Article published successfully! Check your homepage.';
+                articleForm.reset();
+            } catch (err) {
+                console.error('Error publishing:', err);
+                statusMessage.style.color = 'red';
+                statusMessage.innerText = 'Failed to publish: ' + err.message;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Publish Article';
+            }
+        });
+    </script>
+</body>
+</html>
