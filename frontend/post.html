@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Article - Wellness Path</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .post-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .post-header { margin-bottom: 2rem; }
+        .post-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            margin-bottom: 1rem;
+        }
+        .post-title { font-size: 2.2rem; margin-bottom: 1rem; color: var(--text); }
+        .post-hero-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .post-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #374151;
+        }
+        .post-body h1, .post-body h2, .post-body h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+        .post-body p { margin-bottom: 1.25rem; }
+        .post-body blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+            color: #6b7280;
+            font-style: italic;
+            margin: 1.5rem 0;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Wellness<span>Path</span></a>
+            <nav><a href="index.html">Home</a></nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="post-container">
+            <a href="index.html" class="back-link">&larr; Back to Articles</a>
+            
+            <div id="postContentArea">
+                <p style="text-align: center; color: #6b7280;">Loading article...</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2026 Wellness Path. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const SUPABASE_URL = 'https://cgpwkxvpterwjjmvycmd.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNncHdreHZwdGVyd2pqbXZ5Y21kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NDY5NjUsImV4cCI6MjEwNzIyMjk2NX0.oDA47jyZfpzvY3IpFAmKyyiSEkkL5m7fUDb4ouPCorc';
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+            const postArea = document.getElementById('postContentArea');
+
+            if (!postId) {
+                postArea.innerHTML = "<p style='color:red;'>Article ID missing.</p>";
+                return;
+            }
+
+            const { data: post, error } = await supabaseClient
+                .from('posts')
+                .select('*')
+                .eq('id', postId)
+                .single();
+
+            if (error || !post) {
+                postArea.innerHTML = "<p style='color:red;'>Article not found.</p>";
+                return;
+            }
+
+            document.getElementById('pageTitle').innerText = (post.meta_title || post.title) + " - Wellness Path";
+
+            postArea.innerHTML = `
+                <div class="post-header">
+                    <span class="post-badge">${post.category || 'General'}</span>
+                    <h1 class="post-title">${post.title}</h1>
+                </div>
+                ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="post-hero-img">` : ''}
+                <div class="post-body">
+                    ${post.content || post.excerpt}
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
